@@ -1,0 +1,26 @@
+name: Dependency Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  dependency-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore SecurePipelineDemo.sln
+
+      - name: Check Vulnerable Packages
+        run: dotnet list src/SecurePipelineDemo.Api/SecurePipelineDemo.Api.csproj package --vulnerable
